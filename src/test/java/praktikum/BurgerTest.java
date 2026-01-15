@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import org.assertj.core.api.SoftAssertions;
 
 public class BurgerTest {
 
@@ -223,10 +224,12 @@ public class BurgerTest {
         burger.addIngredient(dinosaur);
         burger.addIngredient(chili);
         String receipt = burger.getReceipt();
-        assertTrue("В чеке должен быть первый ингредиент", receipt.contains("Динозавр"));
-        assertTrue("В чеке должен быть второй ингредиент", receipt.contains("Соус чили"));
-        assertTrue("В чеке должен быть тип filling", receipt.contains("filling"));
-        assertTrue("В чеке должен быть тип sauce", receipt.contains("sauce"));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(receipt).as("В чеке должен быть первый ингредиент").contains("Динозавр");
+        softly.assertThat(receipt).as("В чеке должен быть второй ингредиент").contains("Соус чили");
+        softly.assertThat(receipt).as("В чеке должен быть тип filling").contains("filling");
+        softly.assertThat(receipt).as("В чеке должен быть тип sauce").contains("sauce");
+        softly.assertAll();
     }
 
     @Test
@@ -235,8 +238,10 @@ public class BurgerTest {
         burger.addIngredient(sausage);
         burger.addIngredient(chili);
         burger.moveIngredient(2, 0);
-        assertEquals("Ингредиент должен быть перемещен в начало", chili, burger.ingredients.get(0));
-        assertEquals("Первый ингредиент должен сдвинуться", dinosaur, burger.ingredients.get(1));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(burger.ingredients.get(0)).as("Ингредиент должен быть перемещен в начало").isEqualTo(chili);
+        softly.assertThat(burger.ingredients.get(1)).as("Первый ингредиент должен сдвинуться").isEqualTo(dinosaur);
+        softly.assertAll();
     }
 
     @Test
@@ -245,8 +250,10 @@ public class BurgerTest {
         burger.addIngredient(sausage);
         burger.addIngredient(chili);
         burger.moveIngredient(0, 2);
-        assertEquals("Ингредиент должен быть перемещен в конец", dinosaur, burger.ingredients.get(2));
-        assertEquals("Второй ингредиент должен остаться на месте", sausage, burger.ingredients.get(0));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(burger.ingredients.get(2)).as("Ингредиент должен быть перемещен в конец").isEqualTo(dinosaur);
+        softly.assertThat(burger.ingredients.get(0)).as("Второй ингредиент должен остаться на месте").isEqualTo(sausage);
+        softly.assertAll();
     }
 
     @Test
@@ -263,9 +270,11 @@ public class BurgerTest {
         burger.addIngredient(sausage);
         burger.addIngredient(chili);
         burger.removeIngredient(1);
-        assertEquals("Должно остаться 2 ингредиента", 2, burger.ingredients.size());
-        assertEquals("Первый ингредиент должен остаться", dinosaur, burger.ingredients.get(0));
-        assertEquals("Третий ингредиент должен стать вторым", chili, burger.ingredients.get(1));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(burger.ingredients.size()).as("Должно остаться 2 ингредиента").isEqualTo(2);
+        softly.assertThat(burger.ingredients.get(0)).as("Первый ингредиент должен остаться").isEqualTo(dinosaur);
+        softly.assertThat(burger.ingredients.get(1)).as("Третий ингредиент должен стать вторым").isEqualTo(chili);
+        softly.assertAll();
     }
 
     @Test
